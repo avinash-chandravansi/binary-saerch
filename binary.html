@@ -1,0 +1,454 @@
+<html>
+  <head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <style>
+      .labelbox {
+        height: 100px;
+        width: 100px;
+        margin-left: 20px;
+        margin-top: 20px;
+      }
+      .ansbox {
+        border: 1px solid black;
+        background-color: grey;
+        height: 55px;
+        width: 55px;
+        float: left;
+        align-self: center;
+        margin-top: 30px;
+      }
+      .index {
+        margin-top: -20px;
+      }
+      .high {
+        margin-top: 30px;
+        height: 55px;
+        width: 55px;
+        background-color: green;
+      }
+    </style>
+    <script>
+      var arr = [];
+
+      function next() {
+        execute();
+        var speed = document.getElementById("speed").selectedIndex;
+        //  var strUser = e.options[].selectedIndex;
+        //  alert();
+        document.getElementById("alllabel").style.visibility = "visible";
+        var start, mid, last;
+
+        start = 1;
+        var element = document.getElementById("enter").value;
+        last = parseInt(document.getElementById("length").value);
+
+        if (speed == 1) {
+          var time = 4000;
+        } else if (speed == 2) {
+          var time = 6000;
+        } else {
+          var time = 2000;
+        }
+        var start_time = 1000;
+        var counter = 0;
+        var start_p = 0;
+        var last_p = 0;
+        var bb = 0;
+        for (var i = 0; i < arr.length; i++) {
+          setTimeout(() => {
+            var mm = (start + last) / 2;
+
+            if (mm == 1.5) {
+              mid = 1;
+            } else {
+              mid = Math.round(mm);
+            }
+            if (start_p != 0) {
+              document.getElementById("r" + start_p).style.backgroundColor =
+                "gray";
+            }
+            if (last_p != 0) {
+              document.getElementById("r" + last_p).style.backgroundColor =
+                "gray";
+            }
+            document.getElementById("r" + start).style.backgroundColor =
+              "coral";
+            document.getElementById("r" + mid).style.backgroundColor = "yellow";
+            document.getElementById("r" + last).style.backgroundColor =
+              "darkmagenta";
+            document.getElementById("start").innerHTML = "Start = " + start;
+            document.getElementById("mid").innerHTML = "Mid = " + mid;
+            document.getElementById("last").innerHTML = "Last = " + last;
+
+            $("#r" + counter)
+              .find("div")
+              .first()
+              .remove();
+            // document.getElementById("r" + counter).style.backgroundColor =
+            //   ("grey");
+            counter = mid;
+            document.getElementById("r" + mid).style.backgroundColor = "yellow";
+            $("#r" + mid).append(
+              '<div  class="high">  <br/>' +
+                document.getElementById("enter").value +
+                " </div>"
+            );
+            // op.innerHTML = "start" + start + "Mid" + mid + "lst=" + last;
+            //  alert(arr[mid - 1]);
+
+            if (arr[mid - 1] == element) {
+              $("#r" + counter)
+                .find("div")
+                .first()
+                .remove();
+              //    document.getElementById("output").innerHTML = start + mid + last;
+
+              $("#r" + mid).append(
+                '<div  class="high">  <br/>' + element + "  </div>"
+              );
+              document.getElementById("opp").style.color = "green";
+              document.getElementById("opp").innerHTML = "Item Found";
+              clearInterval(interval);
+            } else if (parseInt(arr[mid - 1]) < element) {
+              //right
+              document.getElementById("opp").style.color = "red";
+              document.getElementById("opp").innerHTML =
+                "Element is greater than mid. Moving right ";
+              start_p = start;
+              start = mid;
+            } else if (parseInt(arr[mid - 1]) > element) {
+              //left
+              document.getElementById("opp").style.color = "red";
+              document.getElementById("opp").innerHTML =
+                "Element is less than mid. Moving left ";
+              last_p = last;
+              last = mid;
+            }
+
+            if (
+              mid == 1 ||
+              mid == parseInt(document.getElementById("length").value)
+            ) {
+              document.getElementById("opp").style.color = "red";
+              document.getElementById("opp").innerHTML =
+                "Sorry . Item not found in the given array  ";
+              bb = 1;
+              clearInterval(interval);
+            }
+          }, start_time);
+
+          start_time = time + start_time;
+        }
+      }
+
+      //array print
+
+      function execute() {
+        ll = parseInt(document.getElementById("length").value);
+        var str = document.getElementById("array").value;
+        arr = str.split(",");
+        arr.sort((a, b) => a - b);
+
+        $("#target").empty();
+        $("#target").append("<br/></br></br>");
+        for (var i = 0; i < ll; i++) {
+          $("#target").append(
+            '<div id="r' +
+              (i + 1) +
+              '" class="ansbox"> <p class="index">' +
+              (i + 1) +
+              "</p>  " +
+              arr[i] +
+              "</div>"
+          );
+        }
+      }
+    </script>
+  </head>
+  <body style="background-color: gray">
+    <center>
+      <div
+        style="
+          height: 400px;
+          width: 1000px;
+          background-color: lightgoldenrodyellow;
+        "
+      >
+        <center>
+          <div
+            id="target"
+            style="
+              margin-left: 100px;
+              text-align: center;
+              width: 1000px;
+              height: 250px;
+              overflow-y: auto;
+            "
+          ></div>
+          <br />
+          <div
+            id="oppppp"
+            style="
+              text-align: center;
+              width: 900px;
+              height: 200px;
+              overflow-y: auto;
+            "
+          >
+            <div
+              style="float: left; width: 450px; height: 130px; overflow: scroll"
+            >
+              <h5 id="opp"></h5>
+            </div>
+
+            <div
+              id="alllabel"
+              style="float: right; width: 400px; visibility: hidden"
+            >
+              <div
+                class="labelbox"
+                style="background-color: coral; float: left"
+              >
+                <h4 class="" id="start"></h4>
+              </div>
+              <div
+                class="labelbox"
+                style="background-color: yellow; float: left"
+              >
+                <h4 id="mid"></h4>
+              </div>
+              <div
+                class="labelbox"
+                style="background-color: darkmagenta; float: left"
+              >
+                <h4 id="last"></h4>
+              </div>
+            </div>
+          </div>
+        </center>
+        <br />
+        <p id="label1"></p>
+
+        <p id="label2"></p>
+        <br />
+        <div id="test" style="display: none">
+          Enter Length:
+          <input type="text" id="length" />
+          Enter array: <input type="text" id="array" /> <br />
+          Enter the element to find :
+          <input type="text" name="input" id="enter" required />
+          <select id="speed">
+            <option value="1" selected="selected">
+              Select for slow Animation Speed
+            </option>
+            <option value="2">0.5x</option>
+            <option value="3">0.25x</option>
+          </select>
+          <br />
+          <input type="button" name="input" value="show" onclick="execute()" />
+          <input
+            type="button"
+            name="start"
+            value="start finding"
+            onclick="next()"
+          />
+        </div>
+        <input
+          id="b3"
+          type="button"
+          class="starting"
+          name="backword"
+          value="Previous_Step"
+          onclick="backward()"
+        />
+
+        <input
+          hidden
+          type="button"
+          id="afterloop"
+          name=""
+          value="Manual entry"
+          onclick="manual()"
+        />
+        <input
+          type="button"
+          class="starting"
+          id="ss"
+          name=""
+          value="Start"
+          onclick="init()"
+        />
+
+        <input
+          id="b1"
+          type="button"
+          class="starting"
+          name=""
+          value="Next_Step"
+          onclick="forward()"
+        />
+        <script>
+          var demarr = [1, 3, 4, 5, 7, 12, 45, 67, 89, 90, 94, 95, 98, 97, 99];
+          var st = [1, 1, 1];
+          var mi = [8, 5, 3];
+          var las = [15, 8, 5];
+          var cc = 0;
+          var step_count = 0;
+          function forward() {
+            if (step_count == 0) {
+              document.getElementById("r1").style.backgroundColor = "coral";
+
+              document.getElementById("r15").style.backgroundColor =
+                "darkmagenta";
+
+              document.getElementById("r8").style.backgroundColor = "yellow";
+              $("#r8").append('<div  class="high">  <br/>' + 4 + " </div>");
+
+              document.getElementById("opp").innerHTML =
+                "As we can see our mid element 67 is greater than the element 4 which we are trying to search . <br/> So we will neglet the half right of the array beacuse the it conatins all the element greater than mid element(67)";
+              document.getElementById("start").innerHTML =
+                "Value of start is :" + st[step_count];
+              document.getElementById("mid").innerHTML =
+                "Value of Mid is :" + mi[step_count];
+              document.getElementById("last").innerHTML =
+                "Value of last is :" + las[step_count];
+              step_count++;
+            } else if (step_count == 1) {
+              document.getElementById("r15").style.backgroundColor = "grey";
+              document.getElementById("r8").style.backgroundColor =
+                "darkmagenta";
+              $("#r8").find("div").first().remove();
+              document.getElementById("r5").style.backgroundColor = "yellow";
+              $("#r5").append('<div  class="high">  <br/>' + 4 + " </div>");
+              document.getElementById("opp").innerHTML = `
+Now at this step : last will become mid , <br/> which is last = 8 . <br/>  Now again we will calculate using formula :  <br/> mid =   (start + last) / 2 <br/>
+(1 + 8 ) / 2 = 4.5 (round to nearest number which is 5) 
+
+Now we will check if the mid element located at 5 which is 7 equal to the element which we are trying to find .
+The element at current mid position 5 is not equal to the element which we are trying to find .
+Again we will check if the element is less or greater against the mid element 7  .
+
+Now the search element 4 appear to be less than the mid element 7 , Hence we will neglet the right half of array and procede toward the left.`;
+              document.getElementById("start").innerHTML =
+                "Value of start is :" + st[step_count];
+              document.getElementById("mid").innerHTML =
+                "Value of Mid is :" + mi[step_count];
+              document.getElementById("last").innerHTML =
+                "Value of last is :" + las[step_count];
+
+              step_count++;
+            } else if (step_count == 2) {
+              document.getElementById("r8").style.backgroundColor = "gray";
+              document.getElementById("r5").style.backgroundColor =
+                "darkmagenta";
+              $("#r5").find("div").first().remove();
+              document.getElementById("r3").style.backgroundColor = "yellow";
+              $("#r3").append('<div  class="high">  <br/>' + 4 + " </div>");
+              document.getElementById("opp").innerHTML = `
+Now again last will become mid , <br/> which is last = 5 . <br/>  Now again we will calculate using formula :  <br/> mid =   (start + last) / 2 <br/>
+<br/> (1 + 5) / 2 = 3 <brs/> . Again we will check the mid element at position 3 against the element which we are trying to search.
+Now the element at position 3 which is 4 becomes equal to the element which we are trying to search.Hence we will exit the loop now`;
+              document.getElementById("start").innerHTML =
+                "Value of start is :" + st[step_count];
+              document.getElementById("mid").innerHTML =
+                "Value of Mid is :" + mi[step_count];
+              document.getElementById("last").innerHTML =
+                "Value of last is :" + las[step_count];
+              step_count++;
+              document.getElementById("afterloop").hidden = false;
+            }
+          }
+          function backward() {
+            if (step_count == 1) {
+              document.getElementById("r8").style.backgroundColor = "grey";
+              $("#r8").find("div").first().remove();
+              document.getElementById("opp").innerHTML =
+                "For a binary search to work, it is mandatory for the target array to be sorted.The following is our sorted array and let us assume that we need to search the location of value 4 using binary search.First, we shall determine half of the array by using this formula −<br/><br/> mid =   (start + last) / 2 <br/> <br/> Here it is, <br/> <br/> (1 + 15 ) / 2 = 8 <br/><br/> So, 8 is the mid of the array";
+
+              document.getElementById("start").innerHTML = "Start = 1";
+              document.getElementById("mid").innerHTML = "Mid = 8";
+              document.getElementById("last").innerHTML = "Last = 15";
+              step_count--;
+            } else if (step_count == 2) {
+              document.getElementById("r15").style.backgroundColor =
+                "darkmagenta";
+              $("#r5").find("div").first().remove();
+              document.getElementById("r5").style.backgroundColor = "grey";
+              document.getElementById("r8").style.backgroundColor = "yellow";
+              $("#r8").append('<div  class="high">  <br/>' + 4 + " </div>");
+              document.getElementById("opp").innerHTML =
+                "As we can see our mid element 67 is greater than the element 4 which we are trying to search . <br/> So we will neglet the half right of the array beacuse the it conatins all the element greater than mid element(67)";
+
+              document.getElementById("start").innerHTML =
+                "Value of start is :" + st[0];
+              document.getElementById("mid").innerHTML =
+                "Value of Mid is :" + mi[0];
+              document.getElementById("last").innerHTML =
+                "Value of last is :" + las[0];
+              step_count--;
+            } else if (step_count == 3) {
+              $("#r3").find("div").first().remove();
+              document.getElementById("r3").style.backgroundColor = "grey";
+              document.getElementById("r5").style.backgroundColor = "yellow";
+              $("#r5").append('<div  class="high">  <br/>' + 4 + " </div>");
+              document.getElementById("opp").innerHTML = `
+Now at this step : last will become mid , <br/> which is last = 8 . <br/>  Now again we will calculate using formula :  <br/> mid =   (start + last) / 2 <br/>
+(1 + 8 ) / 2 = 4.5 (round to nearest number which is 5) 
+
+Now we will check if the mid element located at 5 which is 7 equal to the element which we are trying to find .
+The element at current mid position 5 is not equal to the element which we are trying to find .
+Again we will check if the element is less or greater against the mid element 7  .
+
+Now the search element 4 appear to be less than the mid element 7 , Hence we will neglet the right half of array and procede toward the left.`;
+              document.getElementById("start").innerHTML =
+                "Value of start is :" + st[1];
+              document.getElementById("mid").innerHTML =
+                "Value of Mid is :" + mi[1];
+              document.getElementById("last").innerHTML =
+                "Value of last is :" + las[1];
+              document.getElementById("r8").style.backgroundColor =
+                "darkmagenta";
+              step_count--;
+            }
+          }
+          function manual() {
+            document.getElementById("alllabel").style.visibility = "hidden";
+            document.getElementById("b1").hidden = true;
+            document.getElementById("afterloop").hidden = true;
+            document.getElementById("b3").hidden = true;
+            document.getElementById("test").style.display = "block";
+            $("#target").empty();
+            $("#opp").empty();
+            $("#start").empty();
+            $("#mid").empty();
+            $("#last").empty();
+          }
+          function init() {
+            document.getElementById("alllabel").style.visibility = "visible";
+            ll = 15;
+            document.getElementById("opp").innerHTML =
+              "For a binary search to work, it is mandatory for the target array to be sorted.The following is our sorted array and let us assume that we need to search the location of value 4 using binary search.First, we shall determine half of the array by using this formula −<br/><br/> mid =   (start + last) / 2 <br/> <br/> Here it is, <br/> <br/> (1 + 15 ) / 2 = 8 <br/><br/> So, 8 is the mid of the array";
+
+            document.getElementById("start").innerHTML = "Start = 1";
+            document.getElementById("mid").innerHTML = "Mid = 8";
+            document.getElementById("last").innerHTML = "Last = 15";
+            document.getElementById("ss").hidden = true;
+            $("#target").empty();
+            $("#target").append("<br/></br></br>");
+            for (var i = 0; i < ll; i++) {
+              $("#target").append(
+                '<div id="r' +
+                  (i + 1) +
+                  '" class="ansbox"> <p class="index">' +
+                  (i + 1) +
+                  "</p>  " +
+                  demarr[i] +
+                  "</div>"
+              );
+            }
+          }
+        </script>
+      </div>
+    </center>
+  </body>
+</html>
